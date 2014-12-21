@@ -6,9 +6,16 @@ namespace Writer
 {
 	public class Model
 	{
+        private static Random random = new Random();
+        private static int randValue(int value, int percentage)
+        {
+            return value + random.Next(-value*percentage/100, value*percentage/100);
+        }
+
         private System.Timers.Timer timer;
         private bool needToContinue;
         private System.Threading.EventWaitHandle waiter;
+        
 
 		public delegate void StatusDelegate();
 
@@ -17,7 +24,7 @@ namespace Writer
 
 		public Model ()
 		{
-			timer = new System.Timers.Timer (Library.Settings.Instance.TimerInterval);
+			timer = new System.Timers.Timer (randValue(Library.Settings.Instance.TimerInterval, 15));
             timer.Elapsed += new System.Timers.ElapsedEventHandler(onTimer);
             needToContinue = true;
             waiter = new EventWaitHandle(true, System.Threading.EventResetMode.AutoReset,
@@ -55,7 +62,7 @@ namespace Writer
 		public void WriteWord()
 		{
 			waiter.WaitOne ();
-			Thread.Sleep (Library.Settings.Instance.OperationTime);
+			Thread.Sleep (randValue(Library.Settings.Instance.OperationTime, 15));
 			using (StreamWriter sr = new StreamWriter(Library.Settings.Instance.File, true)) {
 				string word = Library.Settings.Instance.Title + ": " + DateTime.Now;
 				sr.WriteLine (word);
