@@ -51,23 +51,21 @@ namespace Writer
         void onTimer(object source, System.Timers.ElapsedEventArgs e)
 		{
 			timer.Stop ();
-			writingStarted ();
-
 			WriteWord ();
-
-			writingFinished ();
             if (needToContinue) timer.Start();
 		}
 
 		public void WriteWord()
 		{
 			waiter.WaitOne ();
+            writingStarted();
 			Thread.Sleep (randValue(Library.Settings.Instance.OperationTime, 15));
 			using (StreamWriter sr = new StreamWriter(Library.Settings.Instance.File, true)) {
 				string word = Library.Settings.Instance.Title + ": " + DateTime.Now;
 				sr.WriteLine (word);
 			}
 			waiter.Set ();
+            writingFinished();
 		}
 	}
 }

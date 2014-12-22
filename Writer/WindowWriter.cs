@@ -62,8 +62,10 @@ namespace Writer
         {
             if (message.Msg == Library.Defines.START_PROCESSES)
             {
-                state = Library.State.Working;
+                state = Library.State.Waiting;
                 model.StartTimer();
+                paintAll();
+                Refresh();
             }
             else if (message.Msg == Library.Defines.STOP_PROCESSES)
             {
